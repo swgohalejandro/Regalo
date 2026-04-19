@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi Amor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            background-color: #f5e8dc; /* Color de fondo del video */
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #5c4033;
+        }
+
+        /* El Árbol */
+        .tree-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .trunk {
+            position: absolute;
+            bottom: 0;
+            width: 10px;
+            height: 100px;
+            background-color: #5c4033;
+            border-radius: 5px;
+        }
+
+        /* Corazones del árbol */
+        .heart-leaf {
+            position: absolute;
+            color: #ff4d7d;
+            animation: grow 2s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes grow {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* Texto y Contador */
+        .content {
+            text-align: center;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+
+        h1 { font-size: 1.5rem; margin-bottom: 5px; }
+        
+        #timer {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #d81b60;
+            background: rgba(255,255,255,0.5);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .message {
+            margin-top: 15px;
+            max-width: 300px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tree-container" id="tree">
+        <div class="trunk"></div>
+    </div>
+
+    <div class="content">
+        <h1>Nuestro amor ha crecido por:</h1>
+        <div id="timer">Cargando tiempo...</div>
+        <p class="message">"Si pudiera elegir un lugar seguro, sería a tu lado."</p>
+    </div>
+
+    <script>
+        // 1. CONFIGURA TU FECHA AQUÍ (Año, Mes - 1, Día)
+        // Ejemplo: Si empezaron el 18 de Marzo de 2025
+        const fechaInicio = new Date(2025, 2, 18);
+    // 2. Lógica del Contador
+    function actualizarContador() {
+        const ahora = new Date();
+        const diferencia = ahora - fechaInicio;
+
+        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+        document.getElementById('timer').innerText = 
+            `${dias} días, ${horas}h ${minutos}m ${segundos}s`;
+    }
+
+    // 3. Crear Corazones en el Árbol
+    function crearCorazon() {
+        const arbol = document.getElementById('tree');
+        const corazon = document.createElement('div');
+        
+        corazon.innerHTML = '❤';
+        corazon.classList.add('heart-leaf');
+        
+        // Posiciones aleatorias para las "hojas" del árbol
+        const x = Math.random() * 200 - 100; // Dispersión horizontal
+        const y = Math.random() * -180 - 50;  // Dispersión vertical hacia arriba
+        const size = Math.random() * (25 - 10) + 10; // Tamaños variados
+        
+        corazon.style.left = `calc(50% + ${x}px)`;
+        corazon.style.top = `calc(100% + ${y}px)`;
+        corazon.style.fontSize = `${size}px`;
+        
+        // Rotación aleatoria para que se vea natural
+        corazon.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+        arbol.appendChild(corazon);
+    }
+
+    // Ejecutar funciones
+    setInterval(actualizarContador, 1000);
+    actualizarContador();
+
+    // Generar 40 corazones para formar la copa del árbol
+    for (let i = 0; i < 40; i++) {
+        setTimeout(crearCorazon, i * 100); 
+    }
+    </script>
+</body>
+</html>
