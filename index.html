@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para mi Princesita</title>
+    <title>Árbol Frondoso para mi Princesita</title>
     <style>
         body {
             background-color: #fdf2e9;
@@ -16,24 +16,24 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            overflow: hidden; /* Para que no haya scroll en celular */
+            overflow: hidden; /* Evitar scroll en celular */
         }
 
         .tree-container {
             position: relative;
-            width: 300px;
-            height: 380px;
-            margin-bottom: 10px;
+            width: 320px; /* Un poco más ancho para más volumen */
+            height: 400px; /* Más alto para copa grande */
+            margin-bottom: 5px;
             display: flex;
             justify-content: center;
-            align-items: flex-end; /* Trunk at the bottom */
+            align-items: flex-end; /* Tronco abajo */
         }
 
         .trunk {
             position: absolute;
             bottom: 0px;
-            width: 12px;
-            height: 180px;
+            width: 14px; /* Un poco más ancho para soportar copa grande */
+            height: 160px; /* Un poco más corto para que la copa empiece más abajo */
             background-color: #5d4037;
             border-radius: 5px;
             z-index: 1;
@@ -41,9 +41,9 @@
 
         .hearts-copa {
             position: absolute;
-            bottom: 100px; /* Base de la copa sobre el tronco */
-            width: 250px;
-            height: 250px;
+            bottom: 80px; /* Empieza un poco más abajo para copa grande */
+            width: 300px; /* Copa mucho más ancha */
+            height: 300px; /* Copa mucho más alta/redonda */
             z-index: 2;
         }
 
@@ -56,8 +56,8 @@
 
         @keyframes floatHeart {
             0% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) translateY(-20px) rotate(5deg); opacity: 1; }
-            100% { transform: translate(-50%, -50%) translateY(-50px) rotate(-5deg); opacity: 0; }
+            50% { transform: translate(-50%, -50%) translateY(-25px) rotate(5deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) translateY(-60px) rotate(-5deg); opacity: 0; }
         }
 
         .header-text {
@@ -114,26 +114,27 @@
 
     <script>
         const container = document.getElementById('heartsContainer');
-        const numHearts = 600; // CANTIDAD REDUCIDA PARA MEJOR DEFINICIÓN
+        const numHearts = 600; // Misma cantidad, más esparcida
 
         // Colores para los corazones
         const colorRosa = '#e91e63'; 
         const colorRojo = '#b71c1c'; 
 
-        // Generar corazones reales (♥)
+        // Generar corazones reales (♥) esparcidos en copa frondosa
         for (let i = 0; i < numHearts; i++) {
             const heart = document.createElement('div');
             heart.classList.add('heart-particle');
-            heart.innerHTML = '♥'; // SÍMBOLO REAL DE CORAZÓN
+            heart.innerHTML = '♥'; // Corazón real
             
-            // Centros de la copa (ajustado para forma redondeada)
-            const centerX = 125; 
-            const centerY = 125; 
+            // Centro de la copa redondeada
+            const centerX = 150; 
+            const centerY = 150; 
             
-            // Posicionamiento en forma de copa redondeada
+            // Posicionamiento en forma de copa redondeada y AMPLIA
             const theta = Math.random() * 2 * Math.PI;
-            const radiusX = Math.random() * 110; // Radio horizontal
-            const radiusY = Math.random() * 100; // Radio vertical
+            // Radios mucho mayores para abarcar tu círculo rojo
+            const radiusX = Math.random() * 145; // Radio horizontal AMPLIO
+            const radiusY = Math.random() * 135; // Radio vertical AMPLIO
             
             const x = centerX + radiusX * Math.cos(theta);
             const y = centerY + radiusY * Math.sin(theta);
@@ -149,8 +150,8 @@
             }
 
             // Movimiento suave y variado
-            const delay = Math.random() * 15; 
-            const duration = 6 + Math.random() * 6; 
+            const delay = Math.random() * 20; 
+            const duration = 8 + Math.random() * 6; 
 
             heart.style.animationDelay = `${-delay}s`;
             heart.style.animationDuration = `${duration}s`;
@@ -159,8 +160,8 @@
             container.appendChild(heart);
         }
 
-        // FECHA DE INICIO DE LA RELACIÓN: 18 de marzo de 2025
-        const startTime = new Date(2025, 2, 18); // Meses son base 0 (Marzo=2)
+        // FECHA DE INICIO: 18 de marzo de 2025
+        const startTime = new Date(2025, 2, 18); // Meses son base 0 (Enero=0, Marzo=2)
 
         function updateCounter() {
             const now = new Date();
