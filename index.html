@@ -3,30 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Un regalo para mi Princesita</title>
+    <title>Para mi Princesita</title>
     <style>
+        :root {
+            --bg-color: #fdf2e9;
+            --pink-light: #f8bbd0;
+            --pink-main: #f48fb1;
+            --pink-dark: #e91e63;
+            --cloud-white: rgba(255, 255, 255, 0.8);
+        }
+
         body {
-            background-color: #fdf2e9;
+            background-color: var(--bg-color);
             color: #5d4037;
             font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
             overflow: hidden;
         }
 
-        /* --- ESTILOS DEL SOBRE (PANTALLA INICIAL) --- */
+        /* --- FONDO ANIMADO (Nubes y Corazones) --- */
+        .background-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-item {
+            position: absolute;
+            animation: moveRight linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes moveRight {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        /* --- SOBRE ESTILO PAPERCRAFT --- */
         #envelope-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #fdf2e9;
+            background-color: var(--bg-color);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -35,83 +64,89 @@
             transition: opacity 1s ease, visibility 1s;
         }
 
-        .envelope {
-            width: 200px;
-            height: 150px;
-            background-color: #f8bbd0;
+        .envelope-wrapper {
             position: relative;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 280px;
+            height: 200px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.1));
         }
 
-        /* Tapa del sobre */
-        .envelope::before {
-            content: "";
+        .envelope-base {
             position: absolute;
-            top: -75px;
-            left: 0;
-            border-left: 100px solid transparent;
-            border-right: 100px solid transparent;
-            border-bottom: 75px solid #f48fb1;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--pink-light);
+            border-radius: 0 0 15px 15px;
             z-index: 1;
         }
 
-        .heart-btn {
-            font-size: 50px;
-            color: #e91e63;
-            z-index: 2;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 100px solid var(--pink-main);
+            z-index: 3;
+            transition: transform 0.5s ease;
+            transform-origin: top;
+        }
+
+        .envelope-wrapper:hover .envelope-flap {
+            transform: rotateX(160deg);
+        }
+
+        .heart-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -10%);
+            font-size: 60px;
+            color: var(--pink-dark);
+            z-index: 4;
             animation: pulse 1.5s infinite;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
         }
 
-        .heart-btn:hover {
-            transform: scale(1.2);
-        }
-
-        .open-text {
-            margin-top: 30px;
-            font-size: 1.5rem;
+        .open-btn-text {
+            margin-top: 40px;
+            font-size: 1.8rem;
             font-weight: bold;
-            color: #ad1457;
-            letter-spacing: 2px;
+            color: var(--pink-dark);
+            letter-spacing: 5px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0%, 100% { transform: translate(-50%, -10%) scale(1); }
+            50% { transform: translate(-50%, -10%) scale(1.15); }
         }
 
-        /* --- ESTILOS DEL ÁRBOL (TU PROYECTO ACTUAL) --- */
+        /* --- CONTENIDO DEL ÁRBOL --- */
         #main-content {
             opacity: 0;
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
+            z-index: 10;
             transition: opacity 1.5s ease;
         }
 
         .tree-container {
             position: relative;
             width: 100%;
-            height: 420px;
-            margin-bottom: 5px;
+            height: 400px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
         }
 
         .trunk {
-            position: absolute;
-            bottom: 0px;
             width: 14px;
-            height: 160px;
+            height: 150px;
             background-color: #5d4037;
             border-radius: 5px;
             z-index: 1;
@@ -119,7 +154,7 @@
 
         .hearts-copa {
             position: absolute;
-            bottom: 60px; 
+            bottom: 60px;
             width: 100%;
             height: 400px;
             z-index: 2;
@@ -127,59 +162,52 @@
 
         .heart-particle {
             position: absolute;
-            font-size: 15px;
+            font-size: 16px;
             transform: translate(-50%, -50%);
-            animation: floatHeart linear infinite;
+            animation: floatTreeHeart linear infinite;
         }
 
-        @keyframes floatHeart {
-            0% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg); opacity: 0.8; }
+        @keyframes floatTreeHeart {
+            0% { transform: translate(-50%, -50%) translateY(0) rotate(0); opacity: 0.8; }
             50% { transform: translate(-50%, -50%) translateY(-15px) rotate(5deg); opacity: 1; }
             100% { transform: translate(-50%, -50%) translateY(-40px) rotate(-5deg); opacity: 0; }
         }
 
-        .header-text {
-            font-size: 1.4rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-            margin-top: 20px;
-        }
-
         .timer-box {
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            padding: 12px 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 15px 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
         }
 
         .time-display {
-            font-size: 1.5rem;
-            color: #e91e63;
+            font-size: 1.6rem;
+            color: var(--pink-dark);
             font-weight: bold;
-            text-align: center;
         }
 
         .quote-text {
-            font-size: 1.1rem;
-            font-style: italic;
-            color: #795548;
+            max-width: 340px;
             text-align: center;
-            padding: 0 20px;
-            line-height: 1.4;
-            max-width: 320px;
-            margin-bottom: 20px;
+            font-style: italic;
+            line-height: 1.5;
+            padding: 0 15px;
         }
     </style>
 </head>
 <body>
 
+    <div class="background-elements" id="bgElements"></div>
+
     <div id="envelope-screen">
-        <div class="envelope" onclick="openGift()">
-            <div class="heart-btn">♥</div>
+        <div class="envelope-wrapper" onclick="openGift()">
+            <div class="envelope-base"></div>
+            <div class="envelope-flap"></div>
+            <div class="heart-seal">♥</div>
         </div>
-        <div class="open-text">ABRIR</div>
+        <div class="open-btn-text">ABRIR</div>
     </div>
 
     <div id="main-content">
@@ -187,90 +215,91 @@
             <div class="trunk"></div>
             <div id="heartsContainer" class="hearts-copa"></div>
         </div>
-
-        <div class="header-text">Nuestro amor ha crecido por:</div>
-
         <div class="timer-box">
+            <div style="font-size: 1.1rem; margin-bottom: 5px;">Nuestro amor ha crecido por:</div>
             <div id="timeCounter" class="time-display">Calculando...</div>
         </div>
-
         <div class="quote-text">
             Te amo mi princesita, eres lo más bonito que me ha pasado, espero poder compartir muchos años más a tu lado♡
         </div>
     </div>
 
     <script>
-        // Función para abrir el regalo
-        function openGift() {
-            document.getElementById('envelope-screen').style.opacity = '0';
-            document.getElementById('envelope-screen').style.visibility = 'hidden';
-            document.getElementById('main-content').style.opacity = '1';
+        // Crear nubes y corazones de fondo
+        function createBackground() {
+            const bg = document.getElementById('bgElements');
+            const icons = ['☁', '♥', '☁', '❤'];
             
-            // Iniciar la generación de corazones cuando se abre
-            generateHearts();
+            for (let i = 0; i < 15; i++) {
+                const item = document.createElement('div');
+                item.className = 'bg-item';
+                item.innerText = icons[Math.floor(Math.random() * icons.length)];
+                
+                const size = 20 + Math.random() * 40;
+                item.style.fontSize = `${size}px`;
+                item.style.top = `${Math.random() * 100}vh`;
+                
+                // Velocidades y retrasos aleatorios para que se vea natural
+                const duration = 15 + Math.random() * 20;
+                const delay = Math.random() * -30;
+                
+                item.style.animationDuration = `${duration}s`;
+                item.style.animationDelay = `${delay}s`;
+                item.style.color = item.innerText === '☁' ? 'white' : '#f48fb1';
+                
+                bg.appendChild(item);
+            }
         }
 
-        function generateHearts() {
-            const container = document.getElementById('heartsContainer');
-            const numHearts = 500;
-            const colorRosa = '#e91e63';
+        function openGift() {
+            document.getElementById('envelope-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('envelope-screen').style.display = 'none';
+                const main = document.getElementById('main-content');
+                main.style.display = 'flex';
+                setTimeout(() => main.style.opacity = '1', 50);
+                generateTree();
+            }, 1000);
+        }
 
-            for (let i = 0; i < numHearts; i++) {
+        function generateTree() {
+            const container = document.getElementById('heartsContainer');
+            for (let i = 0; i < 500; i++) {
                 const heart = document.createElement('div');
-                heart.classList.add('heart-particle');
+                heart.className = 'heart-particle';
                 heart.innerHTML = '♥';
-                
-                const centerX = container.offsetWidth / 2;
-                const centerY = 180;
-                
+                heart.style.color = '#e91e63';
+
                 const theta = Math.random() * 2 * Math.PI;
-                const baseRadius = Math.sqrt(Math.random()); 
-                const variation = 0.85 + (Math.random() * 0.3); 
+                const baseRadius = Math.sqrt(Math.random());
+                const variation = 0.85 + (Math.random() * 0.3);
                 
-                const radiusX = baseRadius * 195 * variation; 
-                const radiusY = baseRadius * 175 * variation; 
-                
-                const x = centerX + radiusX * Math.cos(theta);
-                const y = centerY + radiusY * Math.sin(theta);
+                const x = (container.offsetWidth / 2) + (baseRadius * 195 * variation * Math.cos(theta));
+                const y = 180 + (baseRadius * 175 * variation * Math.sin(theta));
 
                 heart.style.left = `${x}px`;
                 heart.style.top = `${y}px`;
-                heart.style.color = colorRosa;
-
-                const delay = Math.random() * 20; 
-                const duration = 7 + Math.random() * 5; 
-
-                heart.style.animationDelay = `${-delay}s`;
-                heart.style.animationDuration = `${duration}s`;
+                heart.style.animationDuration = `${7 + Math.random() * 5}s`;
+                heart.style.animationDelay = `${Math.random() * -20}s`;
                 heart.style.opacity = 0.4 + Math.random() * 0.6;
-
                 container.appendChild(heart);
             }
         }
 
-        // FECHA DE INICIO: 18 de marzo de 2025
-        const startTime = new Date(2025, 2, 18); 
-
+        const startTime = new Date(2025, 2, 18);
         function updateCounter() {
             const now = new Date();
-            const difference = now.getTime() - startTime.getTime();
-            const msPerDay = 1000 * 60 * 60 * 24;
-            const msPerHour = 1000 * 60 * 60;
-            const msPerMinute = 1000 * 60;
-            const msPerSecond = 1000;
-            let remaining = difference;
-            const days = Math.floor(remaining / msPerDay);
-            remaining %= msPerDay;
-            const hours = Math.floor(remaining / msPerHour);
-            remaining %= msPerHour;
-            const minutes = Math.floor(remaining / msPerMinute);
-            remaining %= msPerMinute;
-            const seconds = Math.floor(remaining / msPerSecond);
-            document.getElementById('timeCounter').innerHTML = 
-                `${days} días, ${hours}h ${minutes}m ${seconds}s`;
+            const diff = now - startTime;
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('timeCounter').innerText = `${d} días, ${h}h ${m}m ${s}s`;
         }
+
+        createBackground();
         setInterval(updateCounter, 1000);
-        updateCounter(); 
+        updateCounter();
     </script>
 </body>
 </html>
