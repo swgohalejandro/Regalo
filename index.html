@@ -6,14 +6,17 @@
     <title>Para mi Princesita</title>
     <style>
         :root {
-            --bg-color: #fdf2e9;
-            --pink-light: #f8bbd0;
-            --pink-main: #f48fb1;
-            --pink-dark: #e91e63;
+            /* --- NUEVOS COLORES --- */
+            --bg-color-page: #fdf2e9;    /* Fondo rosa pastel suave */
+            --pink-strong: #ec407a;       /* Corazones móviles rosa fucsia */
+            --envelope-bone: #fefaf1;     /* Sobre color hueso */
+            --envelope-flap: #fcf4e8;     /* Solapa crema ligeramente más oscura */
+            --wing-color: rgba(255, 255, 255, 0.9); /* Alas blancas */
+            --pink-dark: #e91e63;         /* Sello y corazones árbol */
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-color-page); /* Fondo rosita */
             color: #5d4037;
             font-family: 'Georgia', serif;
             margin: 0;
@@ -25,7 +28,7 @@
             overflow: hidden;
         }
 
-        /* --- FONDO GLOBAL ANIMADO (Desde el inicio) --- */
+        /* --- FONDO GLOBAL ANIMADO (Nubes blancas, Corazones fucsia) --- */
         .background-elements {
             position: fixed;
             top: 0;
@@ -39,7 +42,7 @@
         .bg-item {
             position: absolute;
             animation: moveRight linear infinite;
-            opacity: 0.5;
+            opacity: 0.6;
             user-select: none;
         }
 
@@ -63,13 +66,60 @@
             transition: opacity 1s ease, visibility 1s;
         }
 
+        /* Contenedor para alinear sobre y alas */
+        .envelope-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 101;
+            cursor: pointer;
+        }
+
+        /* --- ALAS Chiquitas --- */
+        .wing {
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            background-color: var(--wing-color);
+            border-radius: 50% 50% 0 50%;
+            z-index: 100;
+            opacity: 0.8;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            animation: wingFlutter 0.3s ease-in-out infinite alternate;
+        }
+
+        .wing-left {
+            left: -55px;
+            top: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .wing-right {
+            right: -55px;
+            top: 20px;
+            transform: rotate(15deg) scaleX(-1); /* Reflejar ala derecha */
+        }
+
+        @keyframes wingFlutter {
+            0% { transform: translate(0, 0) rotate(10deg); }
+            100% { transform: translate(0, -3px) rotate(20deg); }
+        }
+        
+        /* Ajuste animación ala derecha (invertida) */
+        .wing-right {
+            animation: wingFlutterRight 0.3s ease-in-out infinite alternate;
+        }
+        @keyframes wingFlutterRight {
+            0% { transform: translate(0, 0) rotate(-10deg) scaleX(-1); }
+            100% { transform: translate(0, -3px) rotate(-20deg) scaleX(-1); }
+        }
+
         .envelope-wrapper {
             position: relative;
             width: 280px;
             height: 200px;
-            cursor: pointer;
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.1));
-            z-index: 101;
+            filter: drop-shadow(0 10px 25px rgba(0,0,0,0.1));
         }
 
         .envelope-base {
@@ -77,7 +127,7 @@
             bottom: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--pink-light);
+            background-color: var(--envelope-bone); /* Color hueso */
             border-radius: 0 0 15px 15px;
             z-index: 1;
         }
@@ -89,7 +139,7 @@
             height: 0;
             border-left: 140px solid transparent;
             border-right: 140px solid transparent;
-            border-top: 100px solid var(--pink-main);
+            border-top: 100px solid var(--envelope-flap); /* Crema oscuro */
             z-index: 3;
             transition: transform 0.5s ease;
             transform-origin: top;
@@ -113,6 +163,7 @@
             color: var(--pink-dark);
             letter-spacing: 5px;
             z-index: 101;
+            text-align: center;
         }
 
         @keyframes pulse {
@@ -199,10 +250,15 @@
     <div class="background-elements" id="bgElements"></div>
 
     <div id="envelope-screen">
-        <div class="envelope-wrapper" onclick="openGift()">
-            <div class="envelope-base"></div>
-            <div class="envelope-flap"></div>
-            <div class="heart-seal">♥</div>
+        <div class="envelope-container" onclick="openGift()">
+            <div class="wing wing-left"></div>
+            <div class="wing wing-right"></div>
+            
+            <div class="envelope-wrapper">
+                <div class="envelope-base"></div>
+                <div class="envelope-flap"></div>
+                <div class="heart-seal">♥</div>
+            </div>
         </div>
         <div class="open-btn-text">ABRIR</div>
     </div>
@@ -222,7 +278,7 @@
     </div>
 
     <script>
-        // Generar Nubes y Corazones de fondo (Persistentes)
+        // Generar Nubes y Corazones de fondo (Nubes blancas, Corazones Fucsia)
         function createBackground() {
             const bg = document.getElementById('bgElements');
             const icons = ['☁', '♥', '☁', '❤'];
@@ -237,18 +293,19 @@
                 item.style.top = `${Math.random() * 100}vh`;
                 
                 const duration = 12 + Math.random() * 22;
-                const delay = Math.random() * -35; // Para que ya estén en pantalla al cargar
+                const delay = Math.random() * -35; 
                 
                 item.style.animationDuration = `${duration}s`;
                 item.style.animationDelay = `${delay}s`;
-                item.style.color = item.innerText === '☁' ? 'white' : '#f48fb1';
+                
+                // Nubes blancas, Corazones rosa fuerte
+                item.style.color = (item.innerText === '☁') ? 'white' : '#ec407a';
                 
                 bg.appendChild(item);
             }
         }
 
         function openGift() {
-            // Animación de apertura
             document.querySelector('.envelope-flap').style.transform = 'rotateX(160deg)';
             
             setTimeout(() => {
@@ -287,7 +344,6 @@
             }
         }
 
-        // FECHA: 18 de marzo de 2025
         const startTime = new Date(2025, 2, 18);
         function updateCounter() {
             const now = new Date();
@@ -299,10 +355,10 @@
             document.getElementById('timeCounter').innerText = `${d} días, ${h}h ${m}m ${s}s`;
         }
 
-        // Iniciamos todo
         createBackground();
         setInterval(updateCounter, 1000);
         updateCounter();
     </script>
 </body>
 </html>
+
