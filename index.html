@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para mi Princesita</title>
+    <title>Un regalo para mi Princesita</title>
     <style>
         body {
             background-color: #fdf2e9;
@@ -17,6 +17,84 @@
             margin: 0;
             padding: 20px;
             overflow: hidden;
+        }
+
+        /* --- ESTILOS DEL SOBRE (PANTALLA INICIAL) --- */
+        #envelope-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fdf2e9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 1s ease, visibility 1s;
+        }
+
+        .envelope {
+            width: 200px;
+            height: 150px;
+            background-color: #f8bbd0;
+            position: relative;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Tapa del sobre */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: -75px;
+            left: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 75px solid #f48fb1;
+            z-index: 1;
+        }
+
+        .heart-btn {
+            font-size: 50px;
+            color: #e91e63;
+            z-index: 2;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+            animation: pulse 1.5s infinite;
+        }
+
+        .heart-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .open-text {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ad1457;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- ESTILOS DEL ÁRBOL (TU PROYECTO ACTUAL) --- */
+        #main-content {
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 1.5s ease;
         }
 
         .tree-container {
@@ -97,62 +175,80 @@
 </head>
 <body>
 
-    <div class="tree-container">
-        <div class="trunk"></div>
-        <div class="hearts-copa" id="heartsContainer"></div>
+    <div id="envelope-screen">
+        <div class="envelope" onclick="openGift()">
+            <div class="heart-btn">♥</div>
+        </div>
+        <div class="open-text">ABRIR</div>
     </div>
 
-    <div class="header-text">Nuestro amor ha crecido por:</div>
+    <div id="main-content">
+        <div class="tree-container">
+            <div class="trunk"></div>
+            <div id="heartsContainer" class="hearts-copa"></div>
+        </div>
 
-    <div class="timer-box">
-        <div class="time-display" id="timeCounter">Calculando...</div>
-    </div>
+        <div class="header-text">Nuestro amor ha crecido por:</div>
 
-    <div class="quote-text">
-        Te amo mi princesita, eres lo más bonito que me ha pasado, espero poder compartir muchos años más a tu lado♡
+        <div class="timer-box">
+            <div id="timeCounter" class="time-display">Calculando...</div>
+        </div>
+
+        <div class="quote-text">
+            Te amo mi princesita, eres lo más bonito que me ha pasado, espero poder compartir muchos años más a tu lado♡
+        </div>
     </div>
 
     <script>
-        const container = document.getElementById('heartsContainer');
-        const numHearts = 500;
-        const colorRosa = '#e91e63';
-
-        for (let i = 0; i < numHearts; i++) {
-            const heart = document.createElement('div');
-            heart.classList.add('heart-particle');
-            heart.innerHTML = '♥';
+        // Función para abrir el regalo
+        function openGift() {
+            document.getElementById('envelope-screen').style.opacity = '0';
+            document.getElementById('envelope-screen').style.visibility = 'hidden';
+            document.getElementById('main-content').style.opacity = '1';
             
-            const centerX = container.offsetWidth / 2;
-            const centerY = 180;
-            
-            const theta = Math.random() * 2 * Math.PI;
-            
-            // --- LÓGICA DE DISTRIBUCIÓN REDONDEADA NATURAL ---
-            // Usamos Math.sqrt para que los corazones no se amontonen solo en el centro
-            // pero mantenemos un multiplicador aleatorio para la "irregularidad"
-            const baseRadius = Math.sqrt(Math.random()); 
-            const variation = 0.85 + (Math.random() * 0.3); // Crea esa forma no-perfecta
-            
-            const radiusX = baseRadius * 195 * variation; 
-            const radiusY = baseRadius * 175 * variation; 
-            
-            const x = centerX + radiusX * Math.cos(theta);
-            const y = centerY + radiusY * Math.sin(theta);
-
-            heart.style.left = `${x}px`;
-            heart.style.top = `${y}px`;
-            heart.style.color = colorRosa;
-
-            const delay = Math.random() * 20; 
-            const duration = 7 + Math.random() * 5; 
-
-            heart.style.animationDelay = `${-delay}s`;
-            heart.style.animationDuration = `${duration}s`;
-            heart.style.opacity = 0.4 + Math.random() * 0.6;
-
-            container.appendChild(heart);
+            // Iniciar la generación de corazones cuando se abre
+            generateHearts();
         }
 
+        function generateHearts() {
+            const container = document.getElementById('heartsContainer');
+            const numHearts = 500;
+            const colorRosa = '#e91e63';
+
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart-particle');
+                heart.innerHTML = '♥';
+                
+                const centerX = container.offsetWidth / 2;
+                const centerY = 180;
+                
+                const theta = Math.random() * 2 * Math.PI;
+                const baseRadius = Math.sqrt(Math.random()); 
+                const variation = 0.85 + (Math.random() * 0.3); 
+                
+                const radiusX = baseRadius * 195 * variation; 
+                const radiusY = baseRadius * 175 * variation; 
+                
+                const x = centerX + radiusX * Math.cos(theta);
+                const y = centerY + radiusY * Math.sin(theta);
+
+                heart.style.left = `${x}px`;
+                heart.style.top = `${y}px`;
+                heart.style.color = colorRosa;
+
+                const delay = Math.random() * 20; 
+                const duration = 7 + Math.random() * 5; 
+
+                heart.style.animationDelay = `${-delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.opacity = 0.4 + Math.random() * 0.6;
+
+                container.appendChild(heart);
+            }
+        }
+
+        // FECHA DE INICIO: 18 de marzo de 2025
         const startTime = new Date(2025, 2, 18); 
 
         function updateCounter() {
@@ -178,4 +274,3 @@
     </script>
 </body>
 </html>
-
