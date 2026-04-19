@@ -123,15 +123,18 @@
             heart.innerHTML = '♥';
             
             const centerX = container.offsetWidth / 2;
-            const centerY = 200;
+            const centerY = 180;
             
             const theta = Math.random() * 2 * Math.PI;
             
-            // --- AJUSTE PARA FORMA NATURAL ---
-            // Añadimos una variación de "ruido" al radio para que no sea un círculo/óvalo perfecto
-            const noise = 1 + (Math.random() * 0.4 - 0.2); // Factor de irregularidad
-            const radiusX = (Math.random() * 190) * noise; 
-            const radiusY = (Math.random() * 170) * noise; 
+            // --- LÓGICA DE DISTRIBUCIÓN REDONDEADA NATURAL ---
+            // Usamos Math.sqrt para que los corazones no se amontonen solo en el centro
+            // pero mantenemos un multiplicador aleatorio para la "irregularidad"
+            const baseRadius = Math.sqrt(Math.random()); 
+            const variation = 0.85 + (Math.random() * 0.3); // Crea esa forma no-perfecta
+            
+            const radiusX = baseRadius * 195 * variation; 
+            const radiusY = baseRadius * 175 * variation; 
             
             const x = centerX + radiusX * Math.cos(theta);
             const y = centerY + radiusY * Math.sin(theta);
@@ -155,12 +158,10 @@
         function updateCounter() {
             const now = new Date();
             const difference = now.getTime() - startTime.getTime();
-
             const msPerDay = 1000 * 60 * 60 * 24;
             const msPerHour = 1000 * 60 * 60;
             const msPerMinute = 1000 * 60;
             const msPerSecond = 1000;
-
             let remaining = difference;
             const days = Math.floor(remaining / msPerDay);
             remaining %= msPerDay;
@@ -169,13 +170,12 @@
             const minutes = Math.floor(remaining / msPerMinute);
             remaining %= msPerMinute;
             const seconds = Math.floor(remaining / msPerSecond);
-
             document.getElementById('timeCounter').innerHTML = 
                 `${days} días, ${hours}h ${minutes}m ${seconds}s`;
         }
-
         setInterval(updateCounter, 1000);
         updateCounter(); 
     </script>
 </body>
 </html>
+
