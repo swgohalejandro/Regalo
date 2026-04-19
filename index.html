@@ -6,17 +6,18 @@
     <title>Para mi Princesita</title>
     <style>
         :root {
-            /* --- NUEVOS COLORES --- */
-            --bg-color-page: #fdf2e9;    /* Fondo rosa pastel suave */
+            /* --- COLORES CORREGIDOS --- */
+            --bg-color-page: #FFD1DC;    /* Fondo rosita suave (Corregido) */
             --pink-strong: #ec407a;       /* Corazones móviles rosa fucsia */
             --envelope-bone: #fefaf1;     /* Sobre color hueso */
-            --envelope-flap: #fcf4e8;     /* Solapa crema ligeramente más oscura */
-            --wing-color: rgba(255, 255, 255, 0.9); /* Alas blancas */
+            --envelope-flap: #fcf4e8;     /* Solapa crema */
+            --wing-color: #FFFFFF;        /* Alas blancas suaves */
             --pink-dark: #e91e63;         /* Sello y corazones árbol */
+            --cartoon-pink: #ec407a;      /* Color de los bordes suaves de las alas */
         }
 
         body {
-            background-color: var(--bg-color-page); /* Fondo rosita */
+            background-color: var(--bg-color-page); /* El fondo ahora es rosa */
             color: #5d4037;
             font-family: 'Georgia', serif;
             margin: 0;
@@ -76,43 +77,54 @@
             cursor: pointer;
         }
 
-        /* --- ALAS Chiquitas --- */
+        /* --- ALAS ESPONJOSAS ESTILO DIBUJOS ANIMADOS (NUEVAS) --- */
         .wing {
             position: absolute;
-            width: 60px;
-            height: 40px;
+            width: 70px; /* Un poco más grandes para que sean notables */
+            height: 50px;
             background-color: var(--wing-color);
-            border-radius: 50% 50% 0 50%;
+            border-radius: 50%; /* Forma base redondeada */
             z-index: 100;
-            opacity: 0.8;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-            animation: wingFlutter 0.3s ease-in-out infinite alternate;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            transition: transform 0.3s ease;
+        }
+
+        /* Efecto esponjoso con pseudo-elementos */
+        .wing::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 80%;
+            height: 80%;
+            background-color: var(--wing-color);
+            border-radius: 50%;
+            border: 4px solid var(--cartoon-pink); /* Bordes rosa suaves */
         }
 
         .wing-left {
-            left: -55px;
-            top: 20px;
-            transform: rotate(-15deg);
+            left: -65px;
+            top: 15px;
+            transform: rotate(-10deg);
+            animation: wingCartoonFlutter 0.6s ease-in-out infinite alternate;
         }
 
         .wing-right {
-            right: -55px;
-            top: 20px;
-            transform: rotate(15deg) scaleX(-1); /* Reflejar ala derecha */
+            right: -65px;
+            top: 15px;
+            transform: rotate(10deg) scaleX(-1); /* Reflejar ala derecha */
+            animation: wingCartoonFlutterRight 0.6s ease-in-out infinite alternate;
         }
 
-        @keyframes wingFlutter {
-            0% { transform: translate(0, 0) rotate(10deg); }
-            100% { transform: translate(0, -3px) rotate(20deg); }
+        /* Animación suave para alas esponjosas */
+        @keyframes wingCartoonFlutter {
+            0% { transform: translate(0, 0) rotate(-10deg); }
+            100% { transform: translate(0, -5px) rotate(-15deg); }
         }
         
-        /* Ajuste animación ala derecha (invertida) */
-        .wing-right {
-            animation: wingFlutterRight 0.3s ease-in-out infinite alternate;
-        }
-        @keyframes wingFlutterRight {
-            0% { transform: translate(0, 0) rotate(-10deg) scaleX(-1); }
-            100% { transform: translate(0, -3px) rotate(-20deg) scaleX(-1); }
+        @keyframes wingCartoonFlutterRight {
+            0% { transform: translate(0, 0) rotate(10deg) scaleX(-1); }
+            100% { transform: translate(0, -5px) rotate(15deg) scaleX(-1); }
         }
 
         .envelope-wrapper {
@@ -139,7 +151,7 @@
             height: 0;
             border-left: 140px solid transparent;
             border-right: 140px solid transparent;
-            border-top: 100px solid var(--envelope-flap); /* Crema oscuro */
+            border-top: 100px solid var(--envelope-flap); /* Crema */
             z-index: 3;
             transition: transform 0.5s ease;
             transform-origin: top;
@@ -171,7 +183,7 @@
             50% { transform: translate(-50%, -10%) scale(1.15); }
         }
 
-        /* --- CONTENIDO DEL ÁRBOL --- */
+        /* --- CONTENIDO DEL ÁRBOL (SE MANTIENE IGUAL) --- */
         #main-content {
             opacity: 0;
             display: none;
@@ -305,9 +317,18 @@
             }
         }
 
+        // Función para abrir el regalo
         function openGift() {
+            // Abrir tapa
             document.querySelector('.envelope-flap').style.transform = 'rotateX(160deg)';
             
+            // Ocultar alas suavemente
+            document.querySelectorAll('.wing').forEach(wing => {
+                wing.style.transform += ' scale(0)';
+                wing.style.opacity = '0';
+            });
+            
+            // Transición a la pantalla del árbol
             setTimeout(() => {
                 document.getElementById('envelope-screen').style.opacity = '0';
                 setTimeout(() => {
@@ -315,11 +336,12 @@
                     const main = document.getElementById('main-content');
                     main.style.display = 'flex';
                     setTimeout(() => main.style.opacity = '1', 50);
-                    generateTree();
+                    generateTree(); // Iniciar árbol de corazones
                 }, 1000);
             }, 300);
         }
 
+        // Generar el árbol circular natural de 500 corazones
         function generateTree() {
             const container = document.getElementById('heartsContainer');
             for (let i = 0; i < 500; i++) {
@@ -344,6 +366,7 @@
             }
         }
 
+        // Contador de tiempo (18 de marzo de 2025)
         const startTime = new Date(2025, 2, 18);
         function updateCounter() {
             const now = new Date();
@@ -355,6 +378,7 @@
             document.getElementById('timeCounter').innerText = `${d} días, ${h}h ${m}m ${s}s`;
         }
 
+        // Iniciamos fondo y contador al cargar
         createBackground();
         setInterval(updateCounter, 1000);
         updateCounter();
