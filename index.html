@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Árbol de Corazones Masivos</title>
+    <title>Para mi Princesita</title>
     <style>
-        /* Estilo base (mantenemos el color de fondo y el tipo de letra) */
         body {
             background-color: #fdf2e9;
             color: #5d4037;
@@ -17,27 +16,181 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            overflow: hidden; /* Para que los corazones no hagan scroll */
+            overflow: hidden;
         }
 
-        /* Contenedor principal del árbol */
         .tree-container {
             position: relative;
             width: 300px;
-            height: 350px;
-            margin-bottom: 20px;
+            height: 380px;
+            margin-bottom: 10px;
         }
 
-        /* El tronco café (recuperado) */
         .trunk {
             position: absolute;
-            bottom: 0;
+            bottom: 20px;
             left: 50%;
-            width: 15px; /* Más ancho para que se note */
-            height: 200px;
-            background-color: #5d4037; /* Café oscuro */
+            width: 10px;
+            height: 180px;
+            background-color: #5d4037;
             border-radius: 5px;
             transform: translateX(-50%);
+            z-index: 1;
         }
 
-        /* Contenedor para la
+        .hearts-copa {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            z-index: 2;
+        }
+
+        .heart-particle {
+            position: absolute;
+            width: 14px; /* Un poco más pequeños para que quepan más */
+            height: 14px;
+            clip-path: path("M 10 15 L 0 5 A 5 5 0 0 1 10 0 A 5 5 0 0 1 20 5 L 10 15 Z");
+            opacity: 0.8;
+            transform: translate(-50%, -50%);
+            animation: floatHeart linear infinite;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg) scale(1); }
+            30% { transform: translate(-50%, -50%) translateY(-15px) rotate(3deg) scale(1.05); }
+            100% { transform: translate(-50%, -50%) translateY(-45px) rotate(-3deg) scale(0.6); opacity: 0; }
+        }
+
+        .header-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .timer-box {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 12px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .time-display {
+            font-size: 1.5rem;
+            color: #e91e63;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .quote-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #795548;
+            text-align: center;
+            padding: 0 20px;
+            line-height: 1.4;
+            max-width: 320px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tree-container">
+        <div class="trunk"></div>
+        <div class="hearts-copa" id="heartsContainer"></div>
+    </div>
+
+    <div class="header-text">Nuestro amor ha crecido por:</div>
+
+    <div class="timer-box">
+        <div class="time-display" id="timeCounter">Calculando...</div>
+    </div>
+
+    <div class="quote-text">
+        Te amo mi princesita, eres lo más bonito que me ha pasado, espero poder compartir muchos años más a tu lado♡
+    </div>
+
+    <script>
+        const container = document.getElementById('heartsContainer');
+        const numHearts = 1200; // ¡CANTIDAD MASIVA DE CORAZONES!
+
+        // Colores para los corazones
+        const colorRosa = '#e91e63'; // El color rosa original
+        const colorRojo = '#b71c1c'; // Un rojo intenso y profundo
+
+        // Función para posicionar los corazones en forma de copa de árbol densa
+        for (let i = 0; i < numHearts; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            
+            const centerX = 150; // Mitad de la anchura del contenedor
+            const centerY = 160; // Mitad de la altura de la copa
+            
+            // Ecuaciones para una copa ovalada densa
+            const theta = Math.random() * 2 * Math.PI;
+            const radiusX = Math.random() * 150; 
+            const radiusY = Math.random() * 120; 
+            
+            const x = centerX + radiusX * Math.cos(theta);
+            const y = centerY + radiusY * Math.sin(theta);
+
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+
+            // Asignar color: 50% rosa, 50% rojo intenso
+            if (Math.random() < 0.5) {
+                heart.style.backgroundColor = colorRosa;
+            } else {
+                heart.style.backgroundColor = colorRojo;
+            }
+
+            // Variaciones aleatorias para volumen y movimiento más natural
+            const delay = Math.random() * 20; // Mayor retraso para que floten más tiempo
+            const duration = 8 + Math.random() * 6; // Mayor duración para un movimiento más suave
+
+            heart.style.animationDelay = `${-delay}s`;
+            heart.style.animationDuration = `${duration}s`;
+            heart.style.opacity = 0.4 + Math.random() * 0.6; // Opacidad más variada
+
+            container.appendChild(heart);
+        }
+
+        // FECHA DE INICIO DE LA RELACIÓN: 18 de marzo de 2025
+        const startTime = new Date(2025, 2, 18); // Meses son base 0 (Enero=0, Marzo=2)
+
+        function updateCounter() {
+            const now = new Date();
+            const difference = now.getTime() - startTime.getTime();
+
+            // Cálculo preciso de días, horas, minutos y segundos
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const msPerHour = 1000 * 60 * 60;
+            const msPerMinute = 1000 * 60;
+            const msPerSecond = 1000;
+
+            let remaining = difference;
+
+            const days = Math.floor(remaining / msPerDay);
+            remaining %= msPerDay;
+
+            const hours = Math.floor(remaining / msPerHour);
+            remaining %= msPerHour;
+
+            const minutes = Math.floor(remaining / msPerMinute);
+            remaining %= msPerMinute;
+
+            const seconds = Math.floor(remaining / msPerSecond);
+
+            // Formatear el texto final (ej: "30 días, 15h 5m 41s")
+            const timeString = `${days} días, ${hours}h ${minutes}m ${seconds}s`;
+            
+            document.getElementById('timeCounter').innerHTML = timeString;
+        }
+
+        // Ejecutar la actualización cada segundo
+        setInterval(updateCounter, 1000);
+        updateCounter(); // Primera actualización inmediata
+    </script>
+</body>
+</html>
