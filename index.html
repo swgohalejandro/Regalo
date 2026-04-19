@@ -16,24 +16,24 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            overflow: hidden; /* Evitar scroll en celular */
+            overflow: hidden;
         }
 
         .tree-container {
             position: relative;
-            width: 320px; /* Un poco más ancho para más volumen */
-            height: 400px; /* Más alto para copa grande */
+            width: 100%;
+            height: 450px;
             margin-bottom: 5px;
             display: flex;
             justify-content: center;
-            align-items: flex-end; /* Tronco abajo */
+            align-items: flex-end;
         }
 
         .trunk {
             position: absolute;
             bottom: 0px;
-            width: 14px; /* Un poco más ancho para soportar copa grande */
-            height: 160px; /* Un poco más corto para que la copa empiece más abajo */
+            width: 14px;
+            height: 140px;
             background-color: #5d4037;
             border-radius: 5px;
             z-index: 1;
@@ -41,15 +41,15 @@
 
         .hearts-copa {
             position: absolute;
-            bottom: 80px; /* Empieza un poco más abajo para copa grande */
-            width: 300px; /* Copa mucho más ancha */
-            height: 300px; /* Copa mucho más alta/redonda */
+            bottom: 60px;
+            width: 100%;
+            height: 400px;
             z-index: 2;
         }
 
         .heart-particle {
             position: absolute;
-            font-size: 16px; /* Tamaño del corazón real */
+            font-size: 16px;
             transform: translate(-50%, -50%);
             animation: floatHeart linear infinite;
         }
@@ -114,27 +114,24 @@
 
     <script>
         const container = document.getElementById('heartsContainer');
-        const numHearts = 600; // Misma cantidad, más esparcida
+        const numHearts = 600;
 
-        // Colores para los corazones
         const colorRosa = '#e91e63'; 
         const colorRojo = '#b71c1c'; 
 
-        // Generar corazones reales (♥) esparcidos en copa frondosa
         for (let i = 0; i < numHearts; i++) {
             const heart = document.createElement('div');
             heart.classList.add('heart-particle');
-            heart.innerHTML = '♥'; // Corazón real
+            heart.innerHTML = '♥';
             
-            // Centro de la copa redondeada
-            const centerX = 150; 
-            const centerY = 150; 
+            // Centro ajustado dinámicamente al contenedor
+            const centerX = container.offsetWidth / 2;
+            const centerY = 200; 
             
-            // Posicionamiento en forma de copa redondeada y AMPLIA
             const theta = Math.random() * 2 * Math.PI;
-            // Radios mucho mayores para abarcar tu círculo rojo
-            const radiusX = Math.random() * 145; // Radio horizontal AMPLIO
-            const radiusY = Math.random() * 135; // Radio vertical AMPLIO
+            // RADIOS AUMENTADOS A PETICIÓN:
+            const radiusX = Math.random() * 210; 
+            const radiusY = Math.random() * 200; 
             
             const x = centerX + radiusX * Math.cos(theta);
             const y = centerY + radiusY * Math.sin(theta);
@@ -142,14 +139,12 @@
             heart.style.left = `${x}px`;
             heart.style.top = `${y}px`;
 
-            // Asignar color: 50% rosa, 50% rojo intenso
             if (Math.random() < 0.5) {
                 heart.style.color = colorRosa;
             } else {
                 heart.style.color = colorRojo;
             }
 
-            // Movimiento suave y variado
             const delay = Math.random() * 20; 
             const duration = 8 + Math.random() * 6; 
 
@@ -160,30 +155,24 @@
             container.appendChild(heart);
         }
 
-        // FECHA DE INICIO: 18 de marzo de 2025
-        const startTime = new Date(2025, 2, 18); // Meses son base 0 (Enero=0, Marzo=2)
+        const startTime = new Date(2025, 2, 18);
 
         function updateCounter() {
             const now = new Date();
             const difference = now.getTime() - startTime.getTime();
 
-            // Cálculo preciso
             const msPerDay = 1000 * 60 * 60 * 24;
             const msPerHour = 1000 * 60 * 60;
             const msPerMinute = 1000 * 60;
             const msPerSecond = 1000;
 
             let remaining = difference;
-
             const days = Math.floor(remaining / msPerDay);
             remaining %= msPerDay;
-
             const hours = Math.floor(remaining / msPerHour);
             remaining %= msPerHour;
-
             const minutes = Math.floor(remaining / msPerMinute);
             remaining %= msPerMinute;
-
             const seconds = Math.floor(remaining / msPerSecond);
 
             document.getElementById('timeCounter').innerHTML = 
