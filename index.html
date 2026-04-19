@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuestro Corazón Juntos</title>
+    <title>Árbol de Corazones Masivos</title>
     <style>
         /* Estilo base (mantenemos el color de fondo y el tipo de letra) */
         body {
@@ -20,173 +20,24 @@
             overflow: hidden; /* Para que los corazones no hagan scroll */
         }
 
-        /* Contenedor principal de los corazones */
-        .hearts-container {
+        /* Contenedor principal del árbol */
+        .tree-container {
             position: relative;
             width: 300px;
-            height: 300px;
+            height: 350px;
             margin-bottom: 20px;
         }
 
-        /* Estilo para los corazones pequeños */
-        .heart-particle {
+        /* El tronco café (recuperado) */
+        .trunk {
             position: absolute;
-            width: 15px; /* Más pequeños para que quepan más */
-            height: 15px;
-            background-color: #e91e63; /* El color rosa que te gusta */
-            clip-path: path("M 10 15 L 0 5 A 5 5 0 0 1 10 0 A 5 5 0 0 1 20 5 L 10 15 Z"); /* Forma de corazón con CSS */
-            opacity: 0.8;
-            transform: translate(-50%, -50%);
-            animation: floatHeart linear infinite;
+            bottom: 0;
+            left: 50%;
+            width: 15px; /* Más ancho para que se note */
+            height: 200px;
+            background-color: #5d4037; /* Café oscuro */
+            border-radius: 5px;
+            transform: translateX(-50%);
         }
 
-        /* Animación de los corazones: flotar y parpadear */
-        @keyframes floatHeart {
-            0% { transform: translate(-50%, -50%) translateY(0px) scale(1); opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { transform: translate(-50%, -50%) translateY(-300px) scale(0.6); opacity: 0; }
-        }
-
-        /* Estilo del texto "Nuestro amor ha crecido por:" */
-        .header-text {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        /* Estilo del contenedor del contador */
-        .timer-box {
-            background-color: rgba(255, 255, 255, 0.7); /* Fondo semi-transparente */
-            border-radius: 10px;
-            padding: 10px 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        /* Estilo del texto del contador (el rosa grande) */
-        .time-display {
-            font-size: 1.6rem;
-            color: #e91e63;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        /* Estilo de la frase "Si pudiera elegir..." */
-        .quote-text {
-            font-size: 1rem;
-            font-style: italic;
-            color: #8d6e63;
-            text-align: center;
-            padding: 0 15px;
-        }
-
-    </style>
-</head>
-<body>
-
-    <div class="hearts-container" id="heartsContainer">
-        </div>
-
-    <div class="header-text">Nuestro amor ha crecido por:</div>
-
-    <div class="timer-box">
-        <div class="time-display" id="timeCounter">Cargando...</div>
-    </div>
-
-    <div class="quote-text">
-        "Si pudiera elegir un lugar seguro, sería a tu lado."
-    </div>
-
-    <script>
-        // --- 1. CONFIGURACIÓN DEL CORAZÓN DE CORAZONES ---
-
-        const container = document.getElementById('heartsContainer');
-        const numHearts = 150; // ¡Cientos de corazones!
-
-        // Función para posicionar los corazones en forma de corazón grande
-        function posHeart(t) {
-            // Ecuación matemática para dibujar la silueta de un corazón
-            const x = 16 * Math.pow(Math.sin(t), 3);
-            const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-            return { x: x, y: -y }; // Invertimos Y para que dibuje hacia arriba
-        }
-
-        // Crear los corazones y posicionarlos
-        for (let i = 0; i < numHearts; i++) {
-            const heart = document.createElement('div');
-            heart.classList.add('heart-particle');
-            
-            // Posicionamiento en el contorno/interior del corazón grande
-            const t = (i / numHearts) * 2 * Math.PI; // Parámetro para la ecuación
-            const pos = posHeart(t);
-            
-            // Centrar y escalar
-            const centerX = 150; // Mitad de la anchura del contenedor
-            const centerY = 150; // Mitad de la altura del contenedor
-            const scale = 8; // Escala para ajustar el tamaño del corazón grande
-            
-            heart.style.left = `${centerX + pos.x * scale}px`;
-            heart.style.top = `${centerY + pos.y * scale}px`;
-
-            // Variaciones aleatorias para volumen y movimiento
-            const randomOffset = Math.random() * 20 - 10;
-            const animationDelay = Math.random() * 5; // Retraso aleatorio
-            const animationDuration = 5 + Math.random() * 5; // Duración aleatoria
-
-            heart.style.marginLeft = `${randomOffset}px`;
-            heart.style.marginTop = `${randomOffset}px`;
-            heart.style.animationDelay = `${-animationDelay}s`;
-            heart.style.animationDuration = `${animationDuration}s`;
-            heart.style.opacity = Math.random() * 0.4 + 0.6; // Opacidad aleatoria
-
-            container.appendChild(heart);
-        }
-
-
-        // --- 2. CONFIGURACIÓN DEL CONTADOR DE TIEMPO ---
-
-        // FECHA DE INICIO DE LA RELACIÓN: 18 de marzo de 2023
-        const startTime = new Date(2023, 2, 18); // Meses son base 0 (Enero=0, Marzo=2)
-
-        function updateCounter() {
-            const now = new Date();
-            const difference = now.getTime() - startTime.getTime();
-
-            if (difference <= 0) {
-                document.getElementById('timeCounter').innerHTML = "¡Feliz Aniversario!";
-                return;
-            }
-
-            // Cálculo preciso de días, horas, minutos y segundos
-            const msPerDay = 1000 * 60 * 60 * 24;
-            const msPerHour = 1000 * 60 * 60;
-            const msPerMinute = 1000 * 60;
-            const msPerSecond = 1000;
-
-            let remaining = difference;
-
-            const days = Math.floor(remaining / msPerDay);
-            remaining %= msPerDay;
-
-            const hours = Math.floor(remaining / msPerHour);
-            remaining %= msPerHour;
-
-            const minutes = Math.floor(remaining / msPerMinute);
-            remaining %= msPerMinute;
-
-            const seconds = Math.floor(remaining / msPerSecond);
-
-            // Formatear el texto final (ej: "30 días, 15h 5m 41s")
-            const timeString = `${days} días, ${hours}h ${minutes}m ${seconds}s`;
-            
-            document.getElementById('timeCounter').innerHTML = timeString;
-        }
-
-        // Ejecutar la actualización cada segundo
-        setInterval(updateCounter, 1000);
-        updateCounter(); // Primera actualización inmediata
-
-    </script>
-</body>
-</html>
+        /* Contenedor para la
