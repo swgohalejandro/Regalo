@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Árbol de Amor Estable</title>
+    <title>Para mi Princesita</title>
     <style>
         body {
             background-color: #fdf2e9;
@@ -16,50 +16,49 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            overflow: hidden; /* Importante para que no haya scroll en celular */
+            overflow: hidden;
         }
 
-        /* --- CONTENEDOR CENTRAL DEL ÁRBOL (ESTO ARREGLA EL PROBLEMA) --- */
-        .tree-stage {
+        .tree-container {
             position: relative;
-            width: 320px; /* Ancho fijo para garantizar que todo esté centrado */
-            height: 400px; /* Altura suficiente para tronco y copa */
+            width: 100%;
+            height: 450px;
             margin-bottom: 5px;
             display: flex;
-            justify-content: center; /* Centra el tronco horizontalmente */
-            align-items: flex-end; /* Pone el tronco en la base */
+            justify-content: center;
+            align-items: flex-end;
         }
 
         .trunk {
             position: absolute;
             bottom: 0px;
             width: 14px;
-            height: 140px;
+            height: 160px; /* Un poco más alto para soportar la copa */
             background-color: #5d4037;
             border-radius: 5px;
-            z-index: 1; /* El tronco va detrás */
+            z-index: 1;
         }
 
-        /* Contenedor invisible para la copa, atado al centro del Stage */
         .hearts-copa {
             position: absolute;
-            bottom: 60px; /* Donde empieza la copa sobre el tronco */
-            width: 100%; /* Ocupa todo el stage */
-            height: 380px; /* Copa grande y amplia */
-            z-index: 2; /* Los corazones van delante */
+            /* BAJAMOS LA COPA A petición (de 60px a 40px) */
+            bottom: 40px; 
+            width: 100%;
+            height: 400px;
+            z-index: 2;
         }
 
         .heart-particle {
             position: absolute;
-            font-size: 16px; /* Tamaño del corazón real */
+            font-size: 15px; /* Un poco más pequeños */
             transform: translate(-50%, -50%);
             animation: floatHeart linear infinite;
         }
 
         @keyframes floatHeart {
             0% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) translateY(-25px) rotate(5deg); opacity: 1; }
-            100% { transform: translate(-50%, -50%) translateY(-60px) rotate(-5deg); opacity: 0; }
+            50% { transform: translate(-50%, -50%) translateY(-20px) rotate(5deg); opacity: 1; }
+            100% { transform: translate(-50%, -50%) translateY(-50px) rotate(-5deg); opacity: 0; }
         }
 
         .header-text {
@@ -99,7 +98,7 @@
 </head>
 <body>
 
-    <div class="tree-stage">
+    <div class="tree-container">
         <div class="trunk"></div>
         <div class="hearts-copa" id="heartsContainer"></div>
     </div>
@@ -116,26 +115,23 @@
 
     <script>
         const container = document.getElementById('heartsContainer');
-        const numHearts = 500; // Solo 500 corazones como pediste
+        const numHearts = 500; // Mantenemos 500 corazones
 
         const colorRosa = '#e91e63'; // Solo color rosa
 
         for (let i = 0; i < numHearts; i++) {
             const heart = document.createElement('div');
             heart.classList.add('heart-particle');
-            heart.innerHTML = '♥'; // Corazón real
+            heart.innerHTML = '♥';
             
-            // --- CÁLCULO DE POSICIÓN ESTABLE (DENTRO DEL COPA CONTAINER) ---
-            const centerX = container.offsetWidth / 2; // El centro es la mitad del Copa container
-            const centerY = 190; // El centro de la copa ovalada
+            const centerX = container.offsetWidth / 2;
+            const centerY = 190; // Mantenemos el centro de la copa
             
             const theta = Math.random() * 2 * Math.PI;
+            // Radios ampliados para volumen, pero ajustados para la nueva posición
+            const radiusX = Math.random() * 210; 
+            const radiusY = Math.random() * 190; // Un poco menos alto
             
-            // Radios ampliados para volumen, pero dentro del Copa container
-            const radiusX = Math.random() * 155; // Copa frondosa y amplia
-            const radiusY = Math.random() * 145; // Copa redondeada
-            
-            // Posición relativa al centro del stage
             const x = centerX + radiusX * Math.cos(theta);
             const y = centerY + radiusY * Math.sin(theta);
 
@@ -145,7 +141,6 @@
             // Todos los corazones son rosas
             heart.style.color = colorRosa;
 
-            // Variaciones aleatorias para movimiento natural
             const delay = Math.random() * 20; 
             const duration = 8 + Math.random() * 6; 
 
@@ -157,29 +152,24 @@
         }
 
         // FECHA DE INICIO: 18 de marzo de 2025
-        const startTime = new Date(2025, 2, 18); // Meses son base 0 (Enero=0, Marzo=2)
+        const startTime = new Date(2025, 2, 18); 
 
         function updateCounter() {
             const now = new Date();
             const difference = now.getTime() - startTime.getTime();
 
-            // Cálculo preciso
             const msPerDay = 1000 * 60 * 60 * 24;
             const msPerHour = 1000 * 60 * 60;
             const msPerMinute = 1000 * 60;
             const msPerSecond = 1000;
 
             let remaining = difference;
-
             const days = Math.floor(remaining / msPerDay);
             remaining %= msPerDay;
-
             const hours = Math.floor(remaining / msPerHour);
             remaining %= msPerHour;
-
             const minutes = Math.floor(remaining / msPerMinute);
             remaining %= msPerMinute;
-
             const seconds = Math.floor(remaining / msPerSecond);
 
             document.getElementById('timeCounter').innerHTML = 
